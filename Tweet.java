@@ -1,12 +1,12 @@
 
 public class Tweet {
-	int id;
+	long id;
 	String body;
-	int userID;
+	long userID;
 	String user;
 	String location;
 	
-	public Tweet(int id, String body, int userID, String user, String location){
+	public Tweet(long id, String body, long userID, String user, String location){
 		this.id = id;
 		this.body = body;
 		this.userID = userID;
@@ -14,7 +14,14 @@ public class Tweet {
 		this.location = location;
 	}
 	
-	public int getTweetID(){
+	public Tweet(long id, String body, long userID, String user){
+		this.id = id;
+		this.body = body;
+		this.userID = userID;
+		this.user = user;
+	}
+	
+	public long getTweetID(){
 		return this.id;
 	}
 	
@@ -22,7 +29,7 @@ public class Tweet {
 		return this.user;
 	}
 	
-	public int getUserID(){
+	public long getUserID(){
 		return this.userID;
 	}
 	
