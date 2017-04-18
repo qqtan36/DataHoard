@@ -75,8 +75,8 @@ public class TweetLoader {
 				long userID = rs.getLong("b.user_id");
 				String username = rs.getString("b.username");
 				//String location = rs.getString("");
-				tweet = new Tweet(id, text,userID, username);
-				tweetList.add(tweet);
+				//tweet = new Tweet(id, text,userID, username);
+				//tweetList.add(tweet);
 			}
 			
 			return tweetList;
