@@ -54,50 +54,56 @@ public class MiningRunner {
 	// Mysql username
 	private final static String user = "root";
 	// Mysql password
-	private final static String password = "subroutineMartel";//123456";
+	private final static String password = "";//123456";
 	private static Connection conn;
 	
 	
 
 	public static void main(String[] args) throws TwitterException, SQLException, InterruptedException 
 	{
-
 		
-		        HttpClient httpclient = HttpClients.createDefault();
+//		        HttpClient httpclient = HttpClients.createDefault();
 
-		        try
-		        {
-		            URIBuilder builder = new URIBuilder("https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment");
+//		        try
+//		        {
+//		            URIBuilder builder = new URIBuilder("https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment");
+//
+//
+//		            URI uri = builder.build();
+//		            HttpPost request = new HttpPost(uri);
+//		            request.setHeader("Content-Type", "application/json");
+//		            request.setHeader("Ocp-Apim-Subscription-Key", "{subscription key}");
+//
+//
+//		            // Request body
+//		            StringEntity reqEntity = new StringEntity("{body}");
+//		            request.setEntity(reqEntity);
+//
+//		            HttpResponse response = httpclient.execute(request);
+//		            HttpEntity entity = response.getEntity();
+//
+//		            if (entity != null) 
+//		            {
+//		                System.out.println(EntityUtils.toString(entity));
+//		            }
+//		        }
+//		        catch (Exception e)
+//		        {
+//		            System.out.println(e.getMessage());
+//		        }
+//		    
+				
+//		getTrending(); 
 
-
-		            URI uri = builder.build();
-		            HttpPost request = new HttpPost(uri);
-		            request.setHeader("Content-Type", "application/json");
-		            request.setHeader("Ocp-Apim-Subscription-Key", "{subscription key}");
-
-
-		            // Request body
-		            StringEntity reqEntity = new StringEntity("{body}");
-		            request.setEntity(reqEntity);
-
-		            HttpResponse response = httpclient.execute(request);
-		            HttpEntity entity = response.getEntity();
-
-		            if (entity != null) 
-		            {
-		                System.out.println(EntityUtils.toString(entity));
-		            }
-		        }
-		        catch (Exception e)
-		        {
-		            System.out.println(e.getMessage());
-		        }
-		    
+//		getLocation();
 		
 		
+		while (true)
+		{
+			addData();
+			TimeUnit.SECONDS.sleep(10); 
 		
-		getTrending(); 
-		
+		}
 		
 	}
 	
@@ -117,10 +123,10 @@ public class MiningRunner {
 		// TODO Auto-generated method stub
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-		  .setOAuthConsumerKey("GUJPXGn05nx82B7d3GcWpnJxd")
-		  .setOAuthConsumerSecret("PFe1cwu5uG8wpzoWO0cxL1IWxSpp2ZsgFNxEdlPCd7ZqnOtyxo")
-		  .setOAuthAccessToken("850074770859339776-RwADwOwrXNL7q7LuJDOnLH5o7OvXVRx")
-		  .setOAuthAccessTokenSecret("Jav9EdPvMkqZYz1z5KU3hCtcNOr5gGzCHE7BGvzFhSadb");
+		  .setOAuthConsumerKey("JLgrSJKghMrg1KuXRv2gCAcrI")
+		  .setOAuthConsumerSecret("rZJIF2mjtmuXdbzRWba33HGRWPNAJ6JaE20IYyu7xFf9zWEIlq")
+		  .setOAuthAccessToken("2821644371-2DSDGK0QXxSH2sgVnfzMdaI6xFHLDomUWtFa3EB")
+		  .setOAuthAccessTokenSecret("r8ZzowT2kmXHgkuudOmoJCtwqWvHltwY5m9EsH0uHOCXP");
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		Twitter twitter = tf.getInstance();
 		return twitter; 
@@ -130,7 +136,11 @@ public class MiningRunner {
 	public static  ArrayList<Status> searchLocation() throws TwitterException
 	{
 		Twitter twitter = getTwitterinstance();
-		Query query = new Query().geoCode(new GeoLocation(33.753746, -84.386330), 20, "mi"); 
+//		Query query = new Query().geoCode(new GeoLocation(33.753746, -84.386330), 15, "mi"); 
+//		Query query = new Query().geoCode(new GeoLocation(34.052235, -118.243683), 10, "mi"); 
+//		Query query = new Query().geoCode(new GeoLocation(40.730610, -73.935242), 10, "mi"); 
+		Query query = new Query().geoCode(new GeoLocation(41.881832, -87.623177), 10, "mi"); 
+
 		query.count(1000); //You can also set the number of tweets to return per page, up to a max of 100
 		
 		
@@ -165,135 +175,145 @@ public class MiningRunner {
 	      .collect(Collectors.toList());
 	}
 	
-	public static void insertData() throws SQLException
-	{
-		initDatabase(); 
-		
-		Statement statement = null; 
-		
-		statement = conn.createStatement(); 
-		
-		String fileName = "companylist-4.csv";
-		
-		String line = null; 
-		
-        try 
-        {
-            // FileReader reads text files in the default encoding.
-            FileReader fileReader = 
-                new FileReader(fileName);
-
-            // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader = 
-                new BufferedReader(fileReader);
-
-            while((line = bufferedReader.readLine()) != null) {
-
-            	
-            	if (line.contains("LastSale"))
-            		continue; 
-            	 
-            	
-            	System.out.println(line);
-            	
-            	String [] tempArr = line.split(","); 
-            	
-            	
-            	String companyCode = (tempArr[0]).replace("\"", "");
-            	String companyName = (tempArr[1]).replace("\"", "");
-            	
-        		double companyPrice = 0; 
-        		double companyCap = 0;
-            	
-            	try{
-            	companyPrice = Double.parseDouble(tempArr[2]); 
-            	companyCap = Double.parseDouble(tempArr[3]); 
-            	}
-            	catch(NumberFormatException n)
-            	{
-            		companyPrice = 0; 
-            		companyCap = 0; 
-            	}
-            	
-            	String query = "insert into company_info (company_symbol, company_name, price, market_cap) values (\"" + companyCode + "\",  \"" + companyName + "\",  " + companyPrice + ", " + companyCap + ")"; 
-            	
-            	
-            	//System.out.println(query);
-            	
-            	try{
-            	statement.executeUpdate(query); 
-            	}
-            	
-            	catch (MySQLIntegrityConstraintViolationException x)
-            	{
-            		continue; 
-            	}
-            	
-            }   
-
-            // Always close files.
-            bufferedReader.close();         
-        }
-        catch(FileNotFoundException ex) {
-            System.out.println(
-                "Unable to open file '" + 
-                fileName + "'");                
-        }
-        catch(IOException ex) {
-            System.out.println(
-                "Error reading file '" 
-                + fileName + "'");                  
-            // Or we could just do this: 
-            // ex.printStackTrace();
-        }
-		
-		
-	}
-	
-	public static void gatherUsers() throws SQLException, TwitterException
-	{
-		initDatabase(); 
-		
-		Statement statement = null; 
-		
-		statement = conn.createStatement(); 
-		
-		String fileName = "companylist-4.csv";
-		
-		String line = null; 
-		
-		ArrayList<Status> listStatus = searchLocation(); 
-		
-		for (Status s : listStatus)
-		{
-			long tempLong = (s.getUser()).getId(); 
-			String userTweet = s.getText(); 
-			
-			String query = null; 
-			
-			query = "insert into twitter_users (user_id, user_tweet) VALUES (" + tempLong + ", \"" + userTweet + "\")"; 
-			System.out.println(query);
-			
-			try
-			{
-				statement.executeUpdate(query); 
-			}
-			
-        	catch (MySQLIntegrityConstraintViolationException x)
-        	{
-        		continue; 
-        	}
-			
-			catch ( MySQLSyntaxErrorException z)
-			{
-				continue; 
-			}
-			
-		}
-		
-		
-	}
-	
+//	public static void insertData() throws SQLException
+//	{
+//		initDatabase(); 
+//		
+//		Statement statement = null; 
+//		
+//		statement = conn.createStatement(); 
+//		
+//		String fileName = "companylist-4.csv";
+//		
+//		String line = null; 
+//		
+//        try 
+//        {
+//            // FileReader reads text files in the default encoding.
+//            FileReader fileReader = 
+//                new FileReader(fileName);
+//
+//            // Always wrap FileReader in BufferedReader.
+//            BufferedReader bufferedReader = 
+//                new BufferedReader(fileReader);
+//
+//            while((line = bufferedReader.readLine()) != null) {
+//
+//            	
+//            	if (line.contains("LastSale"))
+//            		continue; 
+//            	 
+//            	
+//            	System.out.println(line);
+//            	
+//            	String [] tempArr = line.split(","); 
+//            	
+//            	
+//            	String companyCode = (tempArr[0]).replace("\"", "");
+//            	String companyName = (tempArr[1]).replace("\"", "");
+//            	
+//        		double companyPrice = 0; 
+//        		double companyCap = 0;
+//            	
+//            	try{
+//            	companyPrice = Double.parseDouble(tempArr[2]); 
+//            	companyCap = Double.parseDouble(tempArr[3]); 
+//            	}
+//            	catch(NumberFormatException n)
+//            	{
+//            		companyPrice = 0; 
+//            		companyCap = 0; 
+//            	}
+//            	
+//            	String query = "insert into company_info (company_symbol, company_name, price, market_cap) values (\"" + companyCode + "\",  \"" + companyName + "\",  " + companyPrice + ", " + companyCap + ")"; 
+//            	
+//            	
+//            	//System.out.println(query);
+//            	
+//            	try{
+//            	statement.executeUpdate(query); 
+//            	}
+//            	
+//            	catch (MySQLIntegrityConstraintViolationException x)
+//            	{
+//            		continue; 
+//            	}
+//            	
+//            }   
+//
+//            // Always close files.
+//            bufferedReader.close();         
+//        }
+//        catch(FileNotFoundException ex) {
+//            System.out.println(
+//                "Unable to open file '" + 
+//                fileName + "'");                
+//        }
+//        catch(IOException ex) {
+//            System.out.println(
+//                "Error reading file '" 
+//                + fileName + "'");                  
+//            // Or we could just do this: 
+//            // ex.printStackTrace();
+//        }
+//		
+//		
+//	}
+//	
+//	public static void gatherUsers() throws SQLException, TwitterException
+//	{
+//		
+//		Statement statement = null; 
+//		
+//		statement = conn.createStatement(); 
+//		
+//		String fileName = "companylist-4.csv";
+//		
+//		String line = null; 
+//		
+//		ArrayList<Status> listStatus = searchLocation(); 
+//	 //   Twitter twitter = getTwitterinstance();
+//
+//		
+//		for (Status s : listStatus)
+//		{
+//			long tempLong = (s.getUser()).getId(); 
+//			String userTweet = s.getText(); 
+//			String tempUsername = s.getUser().getName();
+//			double tempLatitude = (s.getGeoLocation()).getLatitude();
+//			double tempLongitude = (s.getGeoLocation()).getLongitude();
+//			String query = null; 
+//	//		User tempUser = twitter.showUser(tempLong); 
+//	//		String tempUsername = tempUser.getName(); 
+//
+//			query = "insert into twitter_users (user_id, user_tweet, username, latitude, longitude) VALUES (" + tempLong + ", \"" + userTweet + "\", \""+ tempUsername + "\", \""+ tempLatitude + "\", \""+ tempLongitude + "\")"; 
+//			
+//			try
+//			{
+//				statement.executeUpdate(query); 
+//				System.out.println(query);
+//
+//			}
+//			
+//        	catch (MySQLIntegrityConstraintViolationException x)
+//        	{
+//        		System.out.println(query);
+//        		x.printStackTrace();
+//        		continue; 
+//        	}
+//			
+//			catch ( MySQLSyntaxErrorException z)
+//			{
+//				System.out.println(query);
+//				z.printStackTrace();
+//				continue; 
+//			}
+//			
+//		}
+//		
+//		
+//	}
+//	
 
 	
 	
@@ -326,7 +346,7 @@ public class MiningRunner {
 		
 		statement = conn.createStatement(); 
 		
-		String fileName = "companylist-4.csv";
+		//String fileName = "companylist-4.csv";
 		
 		String line = null;
 		
@@ -338,12 +358,12 @@ public class MiningRunner {
 		
 	    Twitter twitter = getTwitterinstance();
 
-		
 		while (rs.next())
 		{
 			Statement s2 = conn.createStatement(); 
-			
-			
+		    System.out.println("potato");
+
+			System.out.println(rs.getLong(0));
 
 			
 			if (rs.getString("username") == null)
@@ -398,26 +418,25 @@ public class MiningRunner {
 		{
 			User tempuser = s.getUser(); 
 			
-			String username = tempuser.getName(); 
+			String username = tempuser.getScreenName(); 
 			long user_id = tempuser.getId(); 
-			
+			String location = tempuser.getLocation();
+
 			String tweetinfo = s.getText(); 
 			
 			
-			query1 = "INSERT INTO USER(USER_ID, USERNAME) VALUES(?, ?)"; 
+			query1 = "INSERT INTO USER(USER_ID, USERNAME, LOCATION) VALUES(?, ?, ?)"; 
 			query2 = "INSERT INTO tweet_data (tweet, tweet_id) VALUES(?, ?)"; 
-	
 			try
 			{
 				statement = conn.prepareStatement(query1); 
 				((PreparedStatement) statement).setLong(1, user_id); 
 				((PreparedStatement) statement).setString(2, username); 
+				((PreparedStatement) statement).setString(3, location); 
 				((PreparedStatement)statement).executeUpdate(); 
-				 
-				
-				
 				
 				statement = conn.prepareStatement(query2); 
+				System.out.println(tweetinfo+" "+location);
 				((PreparedStatement) statement).setString(1, tweetinfo); 
 				((PreparedStatement) statement).setLong(2, user_id); 
 				((PreparedStatement)statement).executeUpdate(); 
@@ -433,15 +452,22 @@ public class MiningRunner {
 				((PreparedStatement)statement).executeUpdate();
 				
 				continue; 
-			}
-			
-		}
-		
-		
-		
-
+			}	
+		}	
 	}
 
+	public static void getLocation() throws TwitterException{
+		Twitter twitter = getTwitterinstance(); 
+		ArrayList<Status> listStatus = searchLocation(); 
+		
+		for(Status s : listStatus){
+			User user = s.getUser();
+			String handle = user.getScreenName();
+			String location = user.getLocation();
+			System.out.println(handle);
+		}
+
+	}
 	
 	public static void getTrending() throws SQLException, TwitterException
 	{

@@ -58,13 +58,13 @@ public class TweetLoader {
 			}
 		}
 		
-		public List dataArray() throws SQLException{
+		public List dataArray(String keyword, String location) throws SQLException{
 			initDatabase();
 			List<Tweet> tweetList = new ArrayList();
 			System.out.println("\nSucceeded creating list!\n");
 
 			Statement statement = conn.createStatement();
-			String query = "SELECT a.tweet, a.ID, b.user_id, b.username FROM tweet_data a, user b WHERE tweet_id = user_id LIMIT 10";
+			String query = "SELECT a.tweet, a.ID, b.user_id, b.username FROM tweet_data a, user b WHERE tweet_id = user_id AND a.tweet LIKE %"+keyword+"%";
 			ResultSet rs = statement.executeQuery(query);
 			System.out.println("\nSucceeded executing query!\n");
 
@@ -81,4 +81,5 @@ public class TweetLoader {
 			
 			return tweetList;
 		}
+		
 }

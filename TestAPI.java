@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 
 public class TestAPI {
-	private final String USER_AGENT = "Mozilla/5.0";
+	private final String USER_AGENT = "Chrome/57.0.2987.133";
 
 	public static void main(String[] args) throws Exception{
 		TestAPI test = new TestAPI();
@@ -28,7 +28,7 @@ public class TestAPI {
 		//add request header
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-		String urlParameters = "text=great";
+		String urlParameters = "text=terrible game today";
 		
 		//send post request
 		con.setDoOutput(true);
