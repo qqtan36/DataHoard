@@ -3,3 +3,5 @@
 /Tweet.class
 /TweetLoader.class
 /SentimentAnalysis.class
+/JSONParse.class
+/Sentiment.class

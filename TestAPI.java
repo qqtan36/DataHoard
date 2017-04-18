@@ -14,10 +14,18 @@ public class TestAPI {
 
 	public static void main(String[] args) throws Exception{
 		TestAPI test = new TestAPI();
-		test.sendPost();
+		JSONParse parser = new JSONParse();
+		Sentiment senti;
 		
+		String testString = test.sendPost();
+		senti = parser.parse(testString);
+		System.out.println(testString);
+		System.out.println("Neg: "+senti.getNeg());
+		System.out.println("Neutral: "+senti.getNeutral());
+		System.out.println("Pos: "+senti.getPos());
+
 	}
-	public void sendPost() throws Exception{
+	public String sendPost() throws Exception{
 
 		String url = "http://text-processing.com/api/sentiment/";
 		URL urlObj = new URL(url);
@@ -48,8 +56,8 @@ public class TestAPI {
 		in.close();
 
 		//print result
-		System.out.println(response.toString());
-
+		//System.out.println(response.toString());
+		return response.toString();
 	}
 
 }

@@ -13,7 +13,7 @@ public class SentimentAnalysis {
 	public final String USER_AGENT = "Chrome/57.0.2987.133";
 	
 	
-	public StringBuffer sendPost(String tweet) throws Exception{
+	public String sendPost(String tweet) throws Exception{
 
 		String url = "http://text-processing.com/api/sentiment/";
 		URL urlObj = new URL(url);
@@ -42,10 +42,11 @@ public class SentimentAnalysis {
 			response.append(inputLine);
 		}
 		in.close();
-
+		
+		
 		//print result
 		//System.out.println(response.toString());
-		return response;
+		return response.toString();
 	}
 
 }
