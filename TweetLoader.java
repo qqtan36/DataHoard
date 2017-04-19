@@ -67,7 +67,7 @@ public class TweetLoader {
 			System.out.println("\nSucceeded creating list!\n");
 
 			Statement statement = conn.createStatement();
-			String query = "SELECT a.tweet, a.ID, b.user_id, b.username, a.location FROM tweet_data a, user b WHERE tweet_id = user_id AND a.tweet LIKE %"+keyword+"% AND a.location LIKE %"+location+"%";
+			String query = "SELECT a.tweet, a.ID, b.user_id, b.username, a.location FROM tweet_data a, user b WHERE tweet_id = user_id AND a.tweet LIKE '%"+keyword+"%' AND a.location LIKE %"+location+"%";
 			ResultSet rs = statement.executeQuery(query);
 			System.out.println("\nSucceeded executing query!\n");
 
@@ -94,7 +94,7 @@ public class TweetLoader {
 			List<Tweet> tweetList = new ArrayList();
 			System.out.println("\nSucceeded creating list!\n");
 			Statement statement = conn.createStatement();
-			String query = "SELECT a.tweet, a.ID, b.user_id, b.username, a.location FROM tweet_data a, user b WHERE tweet_id = user_id AND a.user LIKE %"+user+"%";
+			String query = "SELECT a.tweet, a.ID, b.user_id, b.username, b.location FROM tweet_data a, user b WHERE tweet_id = user_id AND b.username LIKE '%"+user+"%'";
 			ResultSet rs = statement.executeQuery(query);
 			System.out.println("\nSucceeded executing query!\n");
 
