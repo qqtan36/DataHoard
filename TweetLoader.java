@@ -57,14 +57,17 @@ public class TweetLoader {
 				e.printStackTrace();
 			}
 		}
-		
+		/**
+		 * pulls tweet and tweet info from database given a keyword and location data
+		 * @author: Yongquan Tan
+		 */
 		public List dataArray(String keyword, String location) throws SQLException{
 			initDatabase();
 			List<Tweet> tweetList = new ArrayList();
 			System.out.println("\nSucceeded creating list!\n");
 
 			Statement statement = conn.createStatement();
-			String query = "SELECT a.tweet, a.ID, b.user_id, b.username FROM tweet_data a, user b WHERE tweet_id = user_id AND a.tweet LIKE %"+keyword+"%";
+			String query = "SELECT a.tweet, a.ID, b.user_id, b.username, a.location FROM tweet_data a, user b WHERE tweet_id = user_id AND a.tweet LIKE %"+keyword+"% AND a.location LIKE %"+location+"%";
 			ResultSet rs = statement.executeQuery(query);
 			System.out.println("\nSucceeded executing query!\n");
 
@@ -74,12 +77,38 @@ public class TweetLoader {
 				String text = rs.getString("a.tweet");
 				long userID = rs.getLong("b.user_id");
 				String username = rs.getString("b.username");
-				//String location = rs.getString("");
-				//tweet = new Tweet(id, text,userID, username);
+				String place = rs.getString("a.location");
+				tweet = new Tweet(id, text,userID, username, place);
 				//tweetList.add(tweet);
 			}
 			
 			return tweetList;
 		}
 		
+		/**
+		 * pulls tweet and tweet info from database given a user
+		 * @author: Yongquan Tan
+		 */
+		public List dataUserArray(String user) throws SQLException{
+			initDatabase();
+			List<Tweet> tweetList = new ArrayList();
+			System.out.println("\nSucceeded creating list!\n");
+			Statement statement = conn.createStatement();
+			String query = "SELECT a.tweet, a.ID, b.user_id, b.username, a.location FROM tweet_data a, user b WHERE tweet_id = user_id AND a.user LIKE %"+user+"%";
+			ResultSet rs = statement.executeQuery(query);
+			System.out.println("\nSucceeded executing query!\n");
+
+			Tweet tweet = null;
+			while(rs.next()){
+				long id = rs.getLong("a.ID");
+				String text = rs.getString("a.tweet");
+				long userID = rs.getLong("b.user_id");
+				String username = rs.getString("b.username");
+				String location = rs.getString("a.location");
+				tweet = new Tweet(id, text,userID, username, location);
+				//tweetList.add(tweet);
+			}
+			
+			return tweetList;
+		}
 }
