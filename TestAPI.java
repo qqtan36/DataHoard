@@ -36,7 +36,7 @@ public class TestAPI {
 		//add request header
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-		String urlParameters = "text=terrible game today";
+		String urlParameters = "text='RT @manuelroyal: @Mediaite Truly amazing headline: \"TRUMP FLIP-FLOPS ON RUSSIA, SYRIA, NATO, CHINA\"";
 		
 		//send post request
 		con.setDoOutput(true);
